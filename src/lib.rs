@@ -3,6 +3,7 @@ use std::{
     thread,
 };
 
+/// A pool of threads to which jobs can be sent for concurrent execution.
 pub struct ThreadPool {
     workers: Vec<Worker>,
     sender: Option<mpsc::Sender<Job>>,
@@ -37,6 +38,9 @@ impl ThreadPool {
         }
     }
 
+    /// Execute a job on the thread pool.
+    ///
+    /// The job is a closure that implements `FnOnce` and is `Send` and `'static`.
     pub fn execute<F>(&self, f: F)
     where
         F: FnOnce() + Send + 'static,
@@ -48,6 +52,7 @@ impl ThreadPool {
 }
 
 impl Drop for ThreadPool {
+    /// Gracefully shuts down all workers in the thread pool.
     fn drop(&mut self) {
         drop(self.sender.take());
 
@@ -61,12 +66,16 @@ impl Drop for ThreadPool {
     }
 }
 
+/// A worker that processes jobs from the thread pool.
 struct Worker {
     id: usize,
     thread: Option<thread::JoinHandle<()>>,
 }
 
 impl Worker {
+    /// Create a new Worker.
+    ///
+    /// The worker will listen for jobs on the given receiver.
     fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
         let thread = thread::spawn(move || loop {
             let message = receiver.lock().unwrap().recv();

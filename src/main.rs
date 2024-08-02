@@ -22,6 +22,9 @@ fn main() {
     println!("Shutting down.");
 }
 
+/// Handle the connection by reading the request and sending an appropriate response.
+///
+/// The response can be a success with `hello.html` or a not found with `404.html`.
 fn handle_connection(mut stream: TcpStream) {
     let buf_reader = BufReader::new(&mut stream);
     let request_line = buf_reader.lines().next().unwrap().unwrap();
