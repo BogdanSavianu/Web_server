@@ -14,5 +14,5 @@ The server handles the following requests:
 
 - `GET /`: Responds with the content of `hello.html`.
 - `GET /sleep`: Waits for 5 seconds and then responds with the content of `hello.html`.
-- `Get /time`: Shows the time in a JSON format and also prints the same to a JSON file.
+- `GET /time`: Shows the time in a JSON format and also prints the same to a JSON file.
 - Any other request: Responds with `404.html`.
