@@ -1,7 +1,10 @@
 use std::{
+    fs::OpenOptions,
+    io::Write,
     sync::{mpsc, Arc, Mutex},
     thread,
 };
+use urlencoding::decode;
 
 /// A pool of threads to which jobs can be sent for concurrent execution.
 pub struct ThreadPool {
@@ -98,4 +101,15 @@ impl Worker {
             thread: Some(thread),
         }
     }
+}
+
+/// Logs a message to a file.
+pub fn log_to_file(contents: &str) {
+    let mut file = OpenOptions::new()
+        .append(true)
+        .create(true)
+        .open("log.txt")
+        .unwrap();
+
+    writeln!(file, "{}", contents).unwrap();
 }
